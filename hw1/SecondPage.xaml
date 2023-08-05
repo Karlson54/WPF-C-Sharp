@@ -1,0 +1,57 @@
+﻿<Page x:Class="hw1.SecondPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="MainWindow" Height="450" Width="800" Background="White">
+    <GroupBox Width="350" Height="410">
+        <GroupBox.Header>
+            <Label>Employee Data</Label>
+        </GroupBox.Header>
+        <StackPanel>
+            <TabControl Name="myTabControl"
+     TabStripPlacement="Top" 
+         Margin="0, 0, 0, 10" Height="350">
+                <TabItem>
+                    <TabItem.Header>MainInfo</TabItem.Header>
+                    <StackPanel>
+                        <ListBox>
+                            <TextBlock x:Name="MainInfo"/>
+                        </ListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>Address</TabItem.Header>
+                    <StackPanel>
+                        <ListBox>
+                            <TextBlock x:Name="Address"/>
+                        </ListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>Job info</TabItem.Header>
+                    <StackPanel>
+                        <ListBox>
+                            <TextBlock x:Name="JobInfo"/>
+                        </ListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>Bank cards</TabItem.Header>
+                    <StackPanel>
+                        <ListBox>
+                            <TextBlock x:Name="BankCards"/>
+                        </ListBox>
+                    </StackPanel>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>Account status</TabItem.Header>
+                    <StackPanel>
+                        <ListBox>
+                            <TextBlock x:Name="AccountStatus"/>
+                        </ListBox>
+                    </StackPanel>
+                </TabItem>
+
+            </TabControl>
+        </StackPanel>
+    </GroupBox>
+</Page>

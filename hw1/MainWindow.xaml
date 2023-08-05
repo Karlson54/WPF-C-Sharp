@@ -1,0 +1,34 @@
+﻿<Window x:Class="hw1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:hw1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <ListBox Name="empName" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+            <ListBoxItem IsSelected="true">
+                Name: Shelton Second Name: Cole
+                Photo: Cool photo
+                Position: Corporate Marketing Producer
+                Email:shelton.cole@email.com
+            </ListBoxItem>
+            <ListBoxItem>
+                Name: Ashot Name: Ashotovich
+                Photo: unknown
+                Position: unknown
+                Email: unknown
+            </ListBoxItem>
+            <ListBoxItem>
+                Name: ? Second Name: ?
+                Photo: ?
+                Position: ?
+                Email: ?
+            </ListBoxItem>
+        </ListBox>
+        <Button Height="30" Width="100" Content="More info" Click="GoToSecondPageButton_Click" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
+
+    </Grid>
+</Window>
