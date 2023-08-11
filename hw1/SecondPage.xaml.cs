@@ -32,10 +32,5 @@ namespace hw1
             this.AccountStatus.Text = AccountStatus;
 
         }
-
-        public void lox()
-        {
-
-        }
     }
 }
