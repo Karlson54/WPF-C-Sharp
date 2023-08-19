@@ -1,18 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 namespace hw1
 {
@@ -60,22 +46,6 @@ namespace hw1
 
             Content = secondPage;
 
-        }
-        private void updateSummary(object sender, SelectionChangedEventArgs e)
-        {
-            //if (emp is not null)
-            //    emp.Text = (empName.SelectedItem as ListBoxItem).Content.ToString();
-
-            //if (ejob is not null)
-            //    ejob.Text = (job.SelectedItem as ListBoxItem).Content.ToString();
-
-            //if (eskill is not null)
-            //    eskill.Text = (skills.SelectedItem as ListBoxItem).Content.ToString();
-        }
-
-        private void goToSummaryTab(object sender, RoutedEventArgs e)
-        {
-            //myTabControl.SelectedIndex = 3;
         }
     }
 }

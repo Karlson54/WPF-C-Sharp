@@ -20,6 +20,8 @@ namespace hw3
             var responseText = await _client.GetStringAsync($"https://random-data-api.com/api/v2/users?size={Count.Text}");
             JToken json = JToken.Parse(responseText);
 
+            users.Clear();
+
             if (json is JArray JArrays)
             {
                 foreach (JToken item in JArrays)
@@ -50,6 +52,8 @@ namespace hw3
                 users.Add(user);
                 PackageList.ItemsSource = users;
             }
+
+            PackageList.Items.Refresh();
         }
 
         private async void Button_Click2(object sender, RoutedEventArgs e)

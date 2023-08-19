@@ -6,20 +6,15 @@
         xmlns:local="clr-namespace:hw3"
         mc:Ignorable="d"
             Title="MainWindow" Height="450" Width="800">
-    <StackPanel Margin="80,0">
+    <StackPanel Margin="80,0" Height="400">
         <Label>How many users?</Label>
         <TextBox x:Name="Count"></TextBox>
         <Button Click="Button_Click">
             Load content
         </Button>
         <Button Click="Button_Click2">
-            Выбрать
+            Select user
         </Button>
-
-        <TextBlock Name="tb_Content" TextWrapping="Wrap"/>
-
-        <ListBox Height="400" Name="PackageList" DisplayMemberPath="Info">
-
-        </ListBox>
+        <ListBox Height="310" Name="PackageList" DisplayMemberPath="Info"/>
     </StackPanel>
 </Window>
