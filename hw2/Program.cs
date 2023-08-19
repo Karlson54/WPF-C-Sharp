@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.Threading.Tasks;
 
 public enum Priority
 {
@@ -12,91 +11,85 @@ public enum Priority
 
 public class CustomThreadPool
 {
-    private int threadCount;
-    private BlockingCollection<Tuple<Priority, Action<object>, object>> taskQueue;
-    private CancellationTokenSource cancellationTokenSource;
-    private Task[] workerThreads;
+    private readonly int threadCount;
+    private readonly BlockingCollection<Tuple<Action<object>, Priority, object>> taskQueue;
+    private bool isStopped = false;
 
     public CustomThreadPool(int threadCount)
     {
         this.threadCount = threadCount;
-        taskQueue = new BlockingCollection<Tuple<Priority, Action<object>, object>>();
-        cancellationTokenSource = new CancellationTokenSource();
-        workerThreads = new Task[threadCount];
+        taskQueue = new BlockingCollection<Tuple<Action<object>, Priority, object>>();
 
         for (int i = 0; i < threadCount; i++)
         {
-            workerThreads[i] = Task.Run(() => Worker(cancellationTokenSource.Token));
+            var thread = new Thread(Worker);
+            thread.Start();
         }
     }
 
     public bool Execute(Action<object> action, Priority priority, object value = null)
     {
-        var task = new Tuple<Priority, Action<object>, object>(priority, action, value);
-        return taskQueue.TryAdd(task);
+        if (isStopped)
+        {
+            Console.WriteLine("ThreadPool is stopped. Cannot add new tasks.");
+            return false;
+        }
+
+        taskQueue.Add(new Tuple<Action<object>, Priority, object>(action, priority, value));
+        return true;
     }
 
     public void Stop()
     {
-        cancellationTokenSource.Cancel();
+        isStopped = true;
+        taskQueue.CompleteAdding();
     }
 
-    private void Worker(CancellationToken cancellationToken)
+    private void Worker()
     {
-        foreach (var task in taskQueue.GetConsumingEnumerable(cancellationToken))
+        foreach (var taskInfo in taskQueue.GetConsumingEnumerable())
         {
-            if (cancellationToken.IsCancellationRequested)
-                break;
-
-            if (task.Item1 == Priority.LOW)
+            if (taskInfo.Item2 == Priority.LOW)
             {
-                foreach (var higherPriorityTask in taskQueue)
+                bool hasHigherPriorityTasks = taskQueue.Any(task => task.Item2 > Priority.LOW);
+                if (hasHigherPriorityTasks)
                 {
-                    if (higherPriorityTask.Item1 == Priority.HIGH)
-                    {
-                        return;
-                    }
+                    continue;
                 }
             }
-            else if (task.Item1 == Priority.NORMAL)
+            else if (taskInfo.Item2 == Priority.NORMAL)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    if (taskQueue.TryTake(out var highPriorityTask))
+                    if (taskQueue.TryTake(out var higherPriorityTask) && higherPriorityTask.Item2 == Priority.HIGH)
                     {
-                        highPriorityTask.Item2(highPriorityTask.Item3);
+                        higherPriorityTask.Item1(higherPriorityTask.Item3);
                     }
                 }
             }
 
-            task.Item2(task.Item3);
+            taskInfo.Item1(taskInfo.Item3);
         }
     }
 }
 
-public class Program
+class Program
 {
     static void Main(string[] args)
     {
-        CustomThreadPool threadPool = new CustomThreadPool(threadCount: 3);
+        CustomThreadPool threadPool = new CustomThreadPool(4);
 
-        threadPool.Execute(TaskMethod, Priority.LOW, "Low priority task 1");
-        threadPool.Execute(TaskMethod, Priority.NORMAL, "Normal priority task 1");
-        threadPool.Execute(TaskMethod, Priority.HIGH, "High priority task 1");
-        threadPool.Execute(TaskMethod, Priority.LOW, "Low priority task 2");
-        threadPool.Execute(TaskMethod, Priority.NORMAL, "Normal priority task 2");
-        threadPool.Execute(TaskMethod, Priority.HIGH, "High priority task 2");
+        for (int i = 1; i <= 10; i++)
+        {
+            int taskNumber = i;
+            threadPool.Execute(obj =>
+            {
+                Console.WriteLine($"Task {taskNumber} with priority {obj} is executing.");
+                Thread.Sleep(1000);
+            }, i % 3 == 0 ? Priority.HIGH : i % 3 == 1 ? Priority.NORMAL : Priority.LOW);
+        }
 
         Thread.Sleep(5000);
-
         threadPool.Stop();
-        Console.WriteLine("Thread pool stopped.");
-
-        Console.ReadLine();
-    }
-
-    static void TaskMethod(object value)
-    {
-        Console.WriteLine($"Executing task: {value}");
     }
 }

@@ -1,28 +1,66 @@
-﻿using System;
+﻿using System.Windows;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace hw3
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        List<User> users = new();
+        private readonly HttpClient _client;
         public MainWindow()
         {
             InitializeComponent();
+            _client = new HttpClient();
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var responseText = await _client.GetStringAsync($"https://random-data-api.com/api/v2/users?size={Count.Text}");
+            JToken json = JToken.Parse(responseText);
+
+            if (json is JArray JArrays)
+            {
+                foreach (JToken item in JArrays)
+                {
+                    User user = new(
+                        item["id"].Value<int>(),
+                        $"{item["first_name"].Value<string>()}",
+                        $"{item["last_name"].Value<string>()}",
+                        $"{item["phone_number"].Value<string>()}",
+                        $"{item["email"].Value<string>()}",
+                        $"{item["address"]["city"].Value<string>()}"
+                    );
+                    users.Add(user);
+                }
+                PackageList.ItemsSource = users;
+            }
+
+            else if (json is JObject obj)
+            {
+                User user = new(
+                    obj["id"].Value<int>(),
+                    $"{obj["first_name"].Value<string>()}",
+                    $"{obj["last_name"].Value<string>()}",
+                    $"{obj["phone_number"].Value<string>()}",
+                    $"{obj["email"].Value<string>()}",
+                    $"{obj["address"]["city"].Value<string>()}"
+                );
+                users.Add(user);
+                PackageList.ItemsSource = users;
+            }
+        }
+
+        private async void Button_Click2(object sender, RoutedEventArgs e)
+        {
+            if (PackageList.SelectedItem is User selectedUser)
+            {
+                var moreInfo = new MoreInfo(selectedUser);
+                Content = moreInfo;
+            }
+        }
+
     }
+
 }

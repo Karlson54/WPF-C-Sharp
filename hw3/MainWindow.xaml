@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:hw3"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+            Title="MainWindow" Height="450" Width="800">
+    <StackPanel Margin="80,0">
+        <Label>How many users?</Label>
+        <TextBox x:Name="Count"></TextBox>
+        <Button Click="Button_Click">
+            Load content
+        </Button>
+        <Button Click="Button_Click2">
+            Выбрать
+        </Button>
 
-    </Grid>
+        <TextBlock Name="tb_Content" TextWrapping="Wrap"/>
+
+        <ListBox Height="400" Name="PackageList" DisplayMemberPath="Info">
+
+        </ListBox>
+    </StackPanel>
 </Window>
