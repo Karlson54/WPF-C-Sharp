@@ -1,38 +1,22 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Threading;
-
-// Определение перечисления для уровней приоритетов задач
-public enum Priority
-{
-    LOW,     // Низкий
-    NORMAL,  // Обычный
-    HIGH     // Высокий
-}
-
-// Класс для собственной реализации пула потоков
+﻿using System.Collections.Concurrent;
 public class CustomThreadPool
 {
-    private readonly int threadCount; // Количество потоков в пуле
-    private readonly BlockingCollection<Tuple<Action<object>, Priority, object>> taskQueue; // Очередь задач
-    private bool isStopped = false; // Флаг для обозначения остановки пула
+    private readonly int threadCount;
+    private readonly BlockingCollection<Tuple<Action<object>, Priority, object>> taskQueue;
+    private bool isStopped = false;
 
-    // Конструктор, принимающий количество потоков в пуле
     public CustomThreadPool(int threadCount)
     {
         this.threadCount = threadCount;
-        taskQueue = new BlockingCollection<Tuple<Action<object>, Priority, object>>(); // Инициализация очереди
+        taskQueue = new BlockingCollection<Tuple<Action<object>, Priority, object>>();
 
-        // Создание и запуск потоков в пуле
         for (int i = 0; i < threadCount; i++)
         {
-            var thread = new Thread(Worker); // Создание нового потока, который будет выполнять задачи
-            thread.Start(); // Запуск потока
+            var thread = new Thread(Worker);
+            thread.Start();
         }
     }
 
-    // Метод для добавления задачи в очередь на выполнение
     public bool Execute(Action<object> action, Priority priority, object value = null)
     {
         if (isStopped)
@@ -41,37 +25,31 @@ public class CustomThreadPool
             return false;
         }
 
-        // Добавление задачи в очередь с указанной операцией, приоритетом и значением
         taskQueue.Add(new Tuple<Action<object>, Priority, object>(action, priority, value));
         return true;
     }
 
-    // Метод для остановки пула
     public void Stop()
     {
-        isStopped = true; // Установка флага остановки
-        taskQueue.CompleteAdding(); // Отметка очереди как завершенной для добавления
+        isStopped = true;
+        taskQueue.CompleteAdding();
     }
 
-    // Метод для выполнения работы потоками пула
     private void Worker()
     {
-        // Перебор задач в очереди
         foreach (var taskInfo in taskQueue.GetConsumingEnumerable())
         {
             if (taskInfo.Item2 == Priority.LOW)
             {
-                // Если приоритет низкий, проверяем наличие задач более высокого приоритета
                 bool hasHigherPriorityTasks = taskQueue.Any(task =>
                     task.Item2 == Priority.HIGH || task.Item2 == Priority.NORMAL);
                 if (hasHigherPriorityTasks)
                 {
-                    continue; // Пропуск задачи, если есть задачи более высокого приоритета
+                    continue;
                 }
             }
             else if (taskInfo.Item2 == Priority.NORMAL)
             {
-                // Если приоритет обычный, выполняем 3 задачи с более высоким приоритетом
                 for (int i = 0; i < 3; i++)
                 {
                     if (taskQueue.TryTake(out var higherPriorityTask) &&
@@ -82,13 +60,11 @@ public class CustomThreadPool
                 }
             }
 
-            // Выполнение задачи из текущей очереди
             taskInfo.Item1(taskInfo.Item3);
         }
     }
 }
 
-// Класс для демонстрации работы пула потоков
 class Program
 {
     static void Main(string[] args)
