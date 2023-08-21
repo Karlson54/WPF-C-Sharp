@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace hw3
+namespace hw5
 {
     public partial class MoreInfo : Page
     {

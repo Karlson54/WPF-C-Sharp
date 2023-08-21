@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw1", "hw1\hw1.csproj", "{564311B7-2640-49C1-9711-82023DD03D8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw2", "hw1\hw2.csproj", "{564311B7-2640-49C1-9711-82023DD03D8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw2", "hw2\hw2.csproj", "{E032DC1F-66FF-4A75-B319-8260390E6619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw3", "hw2\hw3.csproj", "{E032DC1F-66FF-4A75-B319-8260390E6619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw3", "hw3\hw3.csproj", "{4164761D-6509-485E-BC8B-20B3FAE9C811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "hw5", "hw3\hw5.csproj", "{4164761D-6509-485E-BC8B-20B3FAE9C811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

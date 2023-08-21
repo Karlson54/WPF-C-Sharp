@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace hw1
+namespace hw2
 {
     public partial class MainWindow : Window
     {
